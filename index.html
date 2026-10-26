@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100年～115年學測歷屆一字多義補充整理表</title>
+    <style>
+        /* 基礎設定與漸層背景 (淺粉 -> 淺藍) */
+        body { 
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+            /* 淺粉色 (#fce4ec) 到 淺藍色 (#e1f5fe) 的漸層 */
+            background: linear-gradient(135deg, #fce4ec 0%, #e1f5fe 100%); 
+            min-height: 100vh; 
+            margin: 0;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 60px 20px; 
+        }
+        
+        .container { 
+            max-width: 850px; 
+            width: 100%; 
+            text-align: center; 
+        }
+
+        /* 標題：深灰藍色，兩行字體大小一樣 */
+        h1 { 
+            color: #2d3748; 
+            font-size: 2.8rem; 
+            letter-spacing: 1.5px;
+            line-height: 1.4;
+            margin-bottom: 14px; 
+        }
+
+        /* 版權資訊小字：比上下文都小一點 */
+        .copyright {
+            color: #718096;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        /* 副標題：粉藍色調中的點綴色 */
+        .subtitle { 
+            color: #d81b60; /* 偏深的粉紅色，增加閱讀辨識度 */
+            font-weight: bold; 
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 50px; 
+        }
+
+        /* 區塊外框與標題分隔線設計 */
+        .category-wrapper {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            color: #2d3748;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #81d4fa; /* 淺藍色虛線分隔線 */
+        }
+        
+        /* 響應式網格 */
+        .unit-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            gap: 25px; 
+        }
+        
+        /* 按鈕設計 */
+        .unit-card {
+            background: #ffffff; 
+            padding: 24px 20px; 
+            border-radius: 12px; 
+            text-decoration: none;
+            color: #4a5568; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border-left: 6px solid #81d4fa; /* 預設側邊條為淺藍色 */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* 懸停互動 */
+        .unit-card:hover {
+            transform: translateY(-6px); 
+            border-left-color: #f48fb1; /* 滑過變淺粉色 */
+            color: #f48fb1; /* 文字也變淺粉色 */
+            box-shadow: 0 12px 24px rgba(244, 143, 177, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 標題名稱替換（兩行字體大小一樣） -->
+        <h1>100年～115年學測歷屆<br>英文單字  一字多義補充整理表</h1>
+        
+        <!-- 版權小字 -->
+        <p class="copyright">Copyright ©2026 Jean Chen.</p>
+        
+        <!-- 副標題 -->
+        <p class="subtitle">請選擇單字級別進行複習</p>
+
+        <!-- 1-2級單 -->
+        <div class="category-wrapper">
+            <div class="category-title">1-2級單</div>
+            <div class="unit-grid">
+                <a href="level-1-2.html" class="unit-card">📝 1-2級單 一字多義補充</a>
+            </div>
+        </div>
+
+        <!-- 高中3級單 -->
+        <div class="category-wrapper">
+            <div class="category-title">高中3級單</div>
+            <div class="unit-grid">
+                <a href="level-3.html" class="unit-card">📝 高中3級單 一字多義補充</a>
+            </div>
+        </div>
+
+        <!-- 高中4級單 -->
+        <div class="category-wrapper">
+            <div class="category-title">高中4級單</div>
+            <div class="unit-grid">
+                <a href="level-4.html" class="unit-card">📝 高中4級單 一字多義補充</a>
+            </div>
+        </div>
+
+        <!-- 高中5級單 -->
+        <div class="category-wrapper">
+            <div class="category-title">高中5級單</div>
+            <div class="unit-grid">
+                <a href="level-5.html" class="unit-card">📝 高中5級單 一字多義補充</a>
+            </div>
+        </div>
+
+        <!-- 高中6級單 -->
+        <div class="category-wrapper">
+            <div class="category-title">高中6級單</div>
+            <div class="unit-grid">
+                <a href="level-6.html" class="unit-card">📝 高中6級單 一字多義補充</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
