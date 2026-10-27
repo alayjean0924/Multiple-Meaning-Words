@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高中五級單</title>
+    <style>
+        :root {
+            /* 採用 index.html 的淺粉 -> 淺藍漸層與柔和色系 */
+            --bg: linear-gradient(135deg, #fce4ec 0%, #e1f5fe 100%);
+            --primary: #d81b60;        /* 偏深粉紅（來自 index 副標題點綴色） */
+            --primary-light: #f48fb1;  /* 淺粉色（來自 index 卡片懸停色） */
+            --accent-blue: #0288d1;    /* 深天藍（搭配 #81d4fa） */
+            --border-blue: #81d4fa;    /* 淺藍色邊框與分隔線（來自 index） */
+            --text-dark: #2d3748;      /* 深灰藍標題色（來自 index） */
+            --text-body: #4a5568;      /* 內文灰藍色（來自 index） */
+            --text-muted: #718096;     /* 小字灰藍色 */
+        }
+
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 35px 15px 60px;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 820px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            width: 100%;
+        }
+        .active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 首頁白卡 */
+        .home-card {
+            background: rgba(255, 255, 255, 0.96);
+            padding: 40px 30px;
+            border-radius: 26px;
+            box-shadow: 0 15px 40px rgba(45, 55, 72, 0.08);
+            border-top: 6px solid var(--border-blue);
+        }
+
+        .page-title {
+            color: var(--text-dark);
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin: 0 0 18px 0;
+        }
+
+        .info-box {
+            background: #f8fbff;
+            border-left: 5px solid var(--border-blue);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .info-line {
+            color: var(--text-body);
+            font-size: 0.96rem;
+            line-height: 1.65;
+            margin: 6px 0;
+        }
+
+        .info-note {
+            color: var(--primary);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 10px 0 0 0;
+            padding-top: 8px;
+            border-top: 1px dashed #cbd5e0;
+            font-weight: 600;
+        }
+
+        /* 模式選擇區塊 */
+        .mode-section {
+            margin-bottom: 0;
+            text-align: left;
+            background: #ffffff;
+            border: 2px solid #edf2f7;
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: 0.25s ease;
+        }
+        .mode-section:hover {
+            border-color: var(--border-blue);
+            box-shadow: 0 8px 20px rgba(129, 212, 250, 0.18);
+        }
+
+        .mode-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--border-blue);
+        }
+
+        .mode-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .count-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+            gap: 12px;
+        }
+
+        .count-btn {
+            background: #ffffff;
+            color: var(--text-body);
+            border: 2px solid #e2e8f0;
+            border-left: 5px solid var(--border-blue);
+            padding: 12px 10px;
+            border-radius: 12px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .count-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-light);
+            border-left-color: var(--primary);
+            color: var(--primary);
+            background: #fff5f8;
+            box-shadow: 0 6px 14px rgba(244, 143, 177, 0.22);
+        }
+
+        /* 頂部導覽列 */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 14px 22px;
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--border-blue);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-top {
+            background: var(--text-body);
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-top:hover {
+            filter: brightness(0.92);
+            transform: translateY(-1px);
+        }
+        .btn-top.btn-home {
+            background: var(--primary);
+        }
+        .btn-top.btn-mode {
+            background: var(--accent-blue);
+        }
+
+        .progress-badge {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.05rem;
+            white-space: nowrap;
+        }
+
+        /* 3D 翻轉卡片設計 */
+        .card-container {
+            perspective: 1500px;
+            margin-bottom: 22px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            display: flex;
+            min-height: 350px;
+        }
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            width: 100%;
+            padding: 28px 32px;
+            background: #ffffff;
+            border-radius: 26px;
+            box-shadow: 0 12px 32px rgba(45, 55, 72, 0.09);
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            border-left: 8px solid var(--border-blue);
+        }
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: #fffbfd;
+            border: 3px solid var(--primary-light);
+            border-left: 8px solid var(--primary);
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        .hint-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            gap: 12px;
+        }
+
+        .card-id-tag {
+            background: #edf2f7;
+            color: var(--text-body);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        /* 複習卡正面：主要單字放左上角（小寫），搭配詞放頁面正中間並放大成為視覺中心 */
+        .top-left-word-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            text-align: left;
+        }
+
+        .main-word {
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .word-meaning-small {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: #fce4ec;
+            padding: 3px 10px;
+            border-radius: 8px;
+        }
+
+        .review-front-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .collocation-center-box {
+            background: #f0f9ff;
+            border: 2px solid #b3e5fc;
+            padding: 26px 34px;
+            border-radius: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 660px;
+            box-shadow: 0 6px 20px rgba(2, 136, 209, 0.08);
+            box-sizing: border-box;
+        }
+
+        .collocation-main-text {
+            font-size: 2.35rem;
+            font-weight: 900;
+            color: var(--accent-blue);
+            line-height: 1.3;
+            letter-spacing: 0.5px;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .collocation-pos {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-body);
+        }
+
+        .exam-years-footer {
+            width: 100%;
+            text-align: right;
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        /* 複習卡背面：例句 + 中文翻譯 */
+        .review-back-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            text-align: left;
+            gap: 16px;
+        }
+
+        .sent-box {
+            font-size: 1.38rem;
+            line-height: 1.65;
+            color: var(--text-dark);
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .hl-word {
+            color: var(--primary);
+            font-weight: 900;
+            border-bottom: 2px solid var(--primary-light);
+            padding: 0 3px;
+        }
+
+        .back-zh-box {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.6;
+            color: var(--accent-blue);
+            text-align: left;
+            background: rgba(225, 245, 254, 0.55);
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .collocation-main-text {
+                font-size: 1.75rem;
+            }
+            .main-word {
+                font-size: 1.35rem;
+            }
+        }
+
+        /* 底部上下張導覽按鈕 */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            gap: 15px;
+        }
+        .btn-nav {
+            flex: 1;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            background: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--text-body);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border-bottom: 4px solid var(--border-blue);
+            transition: 0.2s;
+        }
+        .btn-nav:hover:not(:disabled) {
+            background: #fff5f8;
+            color: var(--primary);
+            border-bottom-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        .btn-nav:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- 1. 首頁：標題與複習區間選擇 -->
+    <div id="home-screen" class="screen active">
+        <div class="home-card">
+            <div style="display: flex; justify-content: flex-start; margin-bottom: 15px;">
+                <a href="index.html" class="btn-top btn-home">⌂ 返回一字多義主頁面</a>
+            </div>
+
+            <!-- 第一行標題 -->
+            <h1 class="page-title">高中五級單</h1>
+
+            <!-- 第二、三行與註解說明 -->
+            <div class="info-box">
+                <p class="info-line">核對範圍：100～115 學年度英文考科完整試卷（含本文、題幹、選項）。</p>
+                <p class="info-line">既有的其他年度與試辦紀錄沿用原表；新增的考題資訊依試卷用字核對。例句為原表原創例句，並非考題原句。</p>
+                <p class="info-note">註：「相近搭配」表示試卷使用相同核心語詞，但未必與本表片語逐字相同；同一單字的其他詞義或搭配亦可能列於一字多義表。</p>
+            </div>
+
+            <!-- 複習模式選擇 -->
+            <div class="mode-section">
+                <div class="mode-header">
+                    <div class="mode-title">📇 複習模式（雙面記憶卡）</div>
+                    <div class="mode-desc">正面：單字＋搭配詞＋此單字（或搭配詞）學測出現年代 ｜ 背面：例句＋中譯</div>
+                </div>
+                <div id="review-count-grid" class="count-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 複習模式畫面 -->
+    <div id="review-screen" class="screen">
+        <div class="top-nav">
+            <div class="nav-btn-group">
+                <a href="index.html" class="btn-top btn-home">⌂ 返回主頁</a>
+                <button class="btn-top btn-mode" onclick="backToMenu()">☰ 重選區間</button>
+            </div>
+            <div class="progress-badge" id="review-progress-label"></div>
+        </div>
+
+        <div class="card-container" onclick="flipReviewCard()">
+            <div class="card-inner" id="review-card-inner">
+                <!-- 第一面：主要英文單字放在左上角（小寫），搭配詞放頁面正中間放大成為視覺中心 -->
+                <div class="card-face card-front">
+                    <div class="hint-bar">
+                        <div class="top-left-word-group">
+                            <span class="card-id-tag" id="rev-id-tag">L5-01</span>
+                            <span class="main-word" id="rev-word">compromise</span>
+                            <span class="word-meaning-small" id="rev-meaning">妥協 (n.)</span>
+                        </div>
+                        <span style="white-space: nowrap;">💡 點擊卡片翻面看例句</span>
+                    </div>
+                    <div class="review-front-body">
+                        <div class="collocation-center-box">
+                            <div class="collocation-main-text" id="rev-collocation">reach a compromise</div>
+                            <div class="collocation-pos" id="rev-pos-zh">v. phr. 達成妥協</div>
+                        </div>
+                    </div>
+                    <div class="exam-years-footer" id="rev-years"></div>
+                </div>
+
+                <!-- 第二面：配合該搭配詞的例句（紅字只標示到正面搭配詞本身的核心結構）＋中文全句解釋 -->
+                <div class="card-face card-back">
+                    <div class="hint-bar">
+                        <span class="card-id-tag" id="rev-back-tag">L5-01 例句</span>
+                        <span style="color: var(--primary);">💡 點擊卡片翻回正面</span>
+                    </div>
+                    <div class="review-back-body">
+                        <div id="rev-sent-en" class="sent-box"></div>
+                        <div id="rev-sent-zh" class="back-zh-box"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <button id="btn-rev-prev" class="btn-nav" onclick="moveReviewStep(-1)">← 上一張</button>
+            <button id="btn-rev-next" class="btn-nav" onclick="moveReviewStep(1)">下一張 →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 完整 L5-01 ~ L5-32 共 86 句複習資料
+    // 已依英語母語常用用法將可代換受詞改為 something / someone / ...，保留高頻固定搭配，且背面紅字僅標示至正面搭配詞本身的核心結構
+    const rawData = [
+        {"id": "L5-01", "word": "compromise", "meaning": "妥協 (n.)", "collocation": "reach a compromise", "pos_zh": "v. phr. 達成妥協", "years": "學測潛力高頻預測", "hl_en": "After several meetings, the two groups <span class=\"hl-word\">reached a compromise</span> on the park's design.", "zh": "經過數次會議，兩個團體對公園設計達成妥協。"},
+        {"id": "L5-01", "word": "compromise", "meaning": "危及／損害 (v.)", "collocation": "compromise someone's safety", "pos_zh": "v. phr. 危及某人的安全", "years": "學測潛力高頻預測", "hl_en": "To save money, the factory reduced inspections, but the decision <span class=\"hl-word\">compromised</span> workers' <span class=\"hl-word\">safety</span>.", "zh": "工廠為了省錢而減少檢查，但這項決定危及工人安全。"},
+        {"id": "L5-01", "word": "compromise", "meaning": "危及資訊安全 (v.)", "collocation": "compromise personal information", "pos_zh": "v. phr. 危及個人資訊安全", "years": "學測潛力高頻預測", "hl_en": "Using the same password on several websites may <span class=\"hl-word\">compromise personal information</span>.", "zh": "在數個網站使用相同密碼，可能危及個人資訊安全。"},
+        {"id": "L5-02", "word": "exploit", "meaning": "剝削 (v.)", "collocation": "exploit someone", "pos_zh": "v. phr. 剝削某人（如勞工）", "years": "學測潛力高頻預測", "hl_en": "The report accused several employers of <span class=\"hl-word\">exploiting</span> seasonal workers by paying them less than promised.", "zh": "報告指控多名雇主支付低於承諾的薪資，剝削季節性勞工。"},
+        {"id": "L5-02", "word": "exploit", "meaning": "善用／利用 (v.)", "collocation": "exploit an opportunity", "pos_zh": "v. phr. 把握／善用機會", "years": "學測潛力高頻預測", "hl_en": "The university <span class=\"hl-word\">exploited an opportunity</span> to collaborate with an international laboratory.", "zh": "這所大學把握機會，與國際實驗室合作。"},
+        {"id": "L5-02", "word": "exploit", "meaning": "利用 (v.)", "collocation": "exploit a weakness in...", "pos_zh": "v. phr. 利用……的弱點／漏洞", "years": "學測潛力高頻預測", "hl_en": "The hackers <span class=\"hl-word\">exploited a weakness in</span> the system to gain access to confidential files.", "zh": "駭客利用系統弱點取得機密檔案的存取權。"},
+        {"id": "L5-03", "word": "forge", "meaning": "建立 (v.)", "collocation": "forge lasting friendships", "pos_zh": "v. phr. 建立長久友誼", "years": "學測潛力高頻預測", "hl_en": "Students from different backgrounds <span class=\"hl-word\">forged lasting friendships</span> while working together on a coastal cleanup project.", "zh": "不同背景的學生在合作海岸清潔計畫期間建立了長久友誼。"},
+        {"id": "L5-03", "word": "forge", "meaning": "偽造 (v.)", "collocation": "forge a signature", "pos_zh": "v. phr. 偽造簽名", "years": "學測潛力高頻預測", "hl_en": "The bank discovered that someone had <span class=\"hl-word\">forged a signature</span> on the payment form.", "zh": "銀行發現有人在付款表單上偽造簽名。"},
+        {"id": "L5-04", "word": "mount", "meaning": "增加／加劇 (v.)", "collocation": "public pressure mounts", "pos_zh": "v. phr. 公眾壓力持續增加", "years": "103年；114年 文意選填", "hl_en": "<span class=\"hl-word\">Public pressure mounted</span> after photographs revealed the extent of pollution near the factory.", "zh": "照片揭露工廠附近污染程度後，公眾壓力持續增加。"},
+        {"id": "L5-04", "word": "mount", "meaning": "發起／展開 (v.)", "collocation": "mount a rescue operation", "pos_zh": "v. phr. 展開救援行動", "years": "103年；114年 文意選填", "hl_en": "Local authorities <span class=\"hl-word\">mounted a rescue operation</span> after the hikers went missing.", "zh": "登山客失蹤後，當地政府展開救援行動。"},
+        {"id": "L5-04", "word": "mount", "meaning": "不斷增加的 (adj.)", "collocation": "mounting evidence", "pos_zh": "n. phr. 不斷增加的證據", "years": "103年；114年 文意選填", "hl_en": "<span class=\"hl-word\">Mounting evidence</span> suggests that poor sleep can affect students' ability to concentrate.", "zh": "越來越多的證據顯示，睡眠不足可能影響學生的專注能力。"},
+        {"id": "L5-05", "word": "rally", "meaning": "回升 (v.)", "collocation": "something rallies", "pos_zh": "v. phr. （人數、價格等）回升", "years": "學測潛力高頻預測", "hl_en": "Tourism numbers <span class=\"hl-word\">rallied</span> after the railway reopened and local businesses introduced new cultural activities.", "zh": "鐵路重新開通且當地商家推出新的文化活動後，觀光人數回升。"},
+        {"id": "L5-05", "word": "rally", "meaning": "召集／凝聚 (v.)", "collocation": "rally support for...", "pos_zh": "v. phr. 為……凝聚支持", "years": "學測潛力高頻預測", "hl_en": "Student volunteers <span class=\"hl-word\">rallied support for</span> a campaign to protect coastal wetlands.", "zh": "學生志工為保護海岸濕地的活動凝聚支持。"},
+        {"id": "L5-05", "word": "rally", "meaning": "團結支持 (v.)", "collocation": "rally around someone", "pos_zh": "v. phr. 團結支持某人", "years": "學測潛力高頻預測", "hl_en": "Community members <span class=\"hl-word\">rallied around</span> the leader after the storm damaged hundreds of homes.", "zh": "暴風雨損壞數百間房屋後，社區居民團結支持領導者。"},
+        {"id": "L5-06", "word": "shed", "meaning": "擺脫 (v.)", "collocation": "shed outdated beliefs", "pos_zh": "v. phr. 擺脫過時觀念", "years": "106年", "hl_en": "The museum hopes its new exhibits will help visitors <span class=\"hl-word\">shed outdated beliefs</span> about indigenous cultures.", "zh": "博物館希望新展覽能幫助訪客拋開對原住民族文化的過時觀念。"},
+        {"id": "L5-06", "word": "shed", "meaning": "闡明 (v.)", "collocation": "shed light on something", "pos_zh": "v. phr. 揭開／釐清某事", "years": "106年", "hl_en": "New evidence may <span class=\"hl-word\">shed light on</span> why the ancient settlement disappeared.", "zh": "新證據可能有助釐清這座古代聚落消失的原因。"},
+        {"id": "L5-06", "word": "shed", "meaning": "流出（眼淚） (v.)", "collocation": "shed tears of joy", "pos_zh": "v. phr. 流下喜悅的淚水", "years": "106年", "hl_en": "The athletes <span class=\"hl-word\">shed tears of joy</span> after winning their first international championship.", "zh": "運動員贏得首座國際冠軍後，流下喜悅的淚水。"},
+        {"id": "L5-07", "word": "stock", "meaning": "股票 (n.)", "collocation": "company stocks", "pos_zh": "n. phr. 公司股票", "years": "109年；112年 詞彙", "hl_en": "Investors sold their <span class=\"hl-word\">stocks</span> after learning that the company had failed to disclose important financial information.", "zh": "投資人得知公司未揭露重要財務資訊後，賣出持有的股票。"},
+        {"id": "L5-07", "word": "stock", "meaning": "儲備 (v.)", "collocation": "stock up on something", "pos_zh": "v. phr. 儲備某物（如緊急物資）", "years": "109年；112年 詞彙", "hl_en": "Households were advised to <span class=\"hl-word\">stock up on</span> emergency supplies before the typhoon arrived.", "zh": "颱風來臨前，政府建議家戶儲備緊急物資。"},
+        {"id": "L5-07", "word": "stock", "meaning": "庫存／存貨 (n.)", "collocation": "be out of stock", "pos_zh": "adj. phr. 缺貨、銷售一空", "years": "109年；112年 詞彙", "hl_en": "The portable fans <span class=\"hl-word\">were out of stock</span> within hours because of the sudden heat wave.", "zh": "突如其來的熱浪使攜帶式風扇在幾小時內銷售一空。"},
+        {"id": "L5-08", "word": "suspend", "meaning": "暫停 (v.)", "collocation": "suspend flights", "pos_zh": "v. phr. 暫停航班", "years": "109年", "hl_en": "The airline <span class=\"hl-word\">suspended flights</span> to the island when strong winds made landing too dangerous.", "zh": "強風使降落過於危險時，航空公司暫停飛往該島的航班。"},
+        {"id": "L5-08", "word": "suspend", "meaning": "暫停／暫緩 (v.)", "collocation": "suspend an investigation", "pos_zh": "v. phr. 暫停調查", "years": "109年", "hl_en": "Officials <span class=\"hl-word\">suspended the investigation</span> until the laboratory could provide reliable results.", "zh": "官員暫停調查，直到實驗室能提供可靠結果。"},
+        {"id": "L5-08", "word": "suspend", "meaning": "暫緩（懷疑） (v.)", "collocation": "suspend disbelief", "pos_zh": "v. phr. 暫時放下懷疑（接受虛構情節）", "years": "109年", "hl_en": "Fantasy films invite audiences to <span class=\"hl-word\">suspend disbelief</span> and enter an imaginary world.", "zh": "奇幻電影邀請觀眾暫時放下對不真實情節的懷疑，走進想像世界。"},
+        {"id": "L5-09", "word": "sustain", "meaning": "遭受（傷害） (v.)", "collocation": "sustain serious injuries", "pos_zh": "v. phr. 遭受重傷", "years": "100年；112年 文意選填", "hl_en": "Several cyclists <span class=\"hl-word\">sustained serious injuries</span> after a delivery truck failed to stop at the intersection.", "zh": "一輛貨運卡車未在路口停下，造成數名自行車騎士受到重傷。"},
+        {"id": "L5-09", "word": "sustain", "meaning": "維持／支撐 (v.)", "collocation": "sustain economic growth", "pos_zh": "v. phr. 維持經濟成長", "years": "100年；112年 文意選填", "hl_en": "Investments in education can help <span class=\"hl-word\">sustain economic growth</span> over the long term.", "zh": "教育投資有助於長期維持經濟成長。"},
+        {"id": "L5-10", "word": "tackle", "meaning": "處理／解決 (v.)", "collocation": "tackle something", "pos_zh": "v. phr. 著手解決／處理某問題", "years": "學測潛力高頻預測", "hl_en": "The city introduced a long-term plan to <span class=\"hl-word\">tackle</span> air pollution rather than relying on temporary restrictions.", "zh": "市政府提出長期計畫解決空氣污染，而不是仰賴暫時限制。"},
+        {"id": "L5-10", "word": "tackle", "meaning": "著手解決 (v.)", "collocation": "tackle the root causes of...", "pos_zh": "v. phr. 處理……的根本原因", "years": "學測潛力高頻預測", "hl_en": "The policy aims to <span class=\"hl-word\">tackle the root causes of</span> poverty rather than provide temporary aid.", "zh": "這項政策旨在處理貧窮的根本原因，而非僅提供短期援助。"},
+        {"id": "L5-11", "word": "trigger", "meaning": "引發 (v.)", "collocation": "trigger panic buying", "pos_zh": "v. phr. 引發恐慌性搶購", "years": "108年；111年 閱讀；112年 篇章結構；114年 閱讀", "hl_en": "A false report on social media <span class=\"hl-word\">triggered panic buying</span> in several neighborhoods despite officials' repeated warnings.", "zh": "儘管官員再三警告，社群媒體上的假消息仍引發多個社區恐慌性搶購。"},
+        {"id": "L5-11", "word": "trigger", "meaning": "引發 (v.)", "collocation": "trigger an allergic reaction", "pos_zh": "v. phr. 引發過敏反應", "years": "108年；111年 閱讀；112年 篇章結構；114年 閱讀", "hl_en": "Certain food additives can <span class=\"hl-word\">trigger an allergic reaction</span> in sensitive individuals.", "zh": "某些食品添加物可能使敏感體質者產生過敏反應。"},
+        {"id": "L5-11", "word": "trigger", "meaning": "誘因 (n.)", "collocation": "a trigger for...", "pos_zh": "n. phr. 引發……的誘因", "years": "108年；111年 閱讀；112年 篇章結構；114年 閱讀", "hl_en": "For some students, constant comparisons with classmates become <span class=\"hl-word\">a trigger for</span> anxiety.", "zh": "對某些學生來說，不斷與同學比較會成為引發焦慮的誘因。"},
+        {"id": "L5-12", "word": "yield", "meaning": "屈服／讓步 (v.)", "collocation": "yield to public pressure", "pos_zh": "v. phr. 屈服於公眾壓力", "years": "101年；111年 混合；114年 詞彙", "hl_en": "The company finally <span class=\"hl-word\">yielded to public pressure</span> and agreed to release the full investigation report.", "zh": "公司最終屈服於公眾壓力，同意公布完整調查報告。"},
+        {"id": "L5-12", "word": "yield", "meaning": "產生 (v.)", "collocation": "yield promising results", "pos_zh": "v. phr. 產生令人期待的結果", "years": "101年；111年 混合；114年 詞彙", "hl_en": "The pilot program <span class=\"hl-word\">yielded promising results</span> in reducing household waste.", "zh": "這項試辦計畫在減少家庭廢棄物方面取得令人期待的成果。"},
+        {"id": "L5-12", "word": "yield", "meaning": "禮讓 (v.)", "collocation": "yield the right of way", "pos_zh": "v. phr. 禮讓路權", "years": "101年；111年 混合；114年 詞彙", "hl_en": "Drivers must <span class=\"hl-word\">yield the right of way</span> to pedestrians at designated crossings.", "zh": "駕駛必須在指定行人穿越道禮讓行人。"},
+        {"id": "L5-13", "word": "abuse", "meaning": "辱罵 (v.)", "collocation": "verbally abuse someone", "pos_zh": "v. phr. 出言辱罵某人", "years": "學測潛力高頻預測", "hl_en": "Witnesses said the supervisor <span class=\"hl-word\">abused</span> employees <span class=\"hl-word\">verbally</span> whenever sales figures failed to meet expectations.", "zh": "目擊者表示，只要業績未達預期，主管就會出言辱罵員工。"},
+        {"id": "L5-13", "word": "abuse", "meaning": "濫用 (n.)", "collocation": "abuse of authority", "pos_zh": "n. phr. 濫用職權", "years": "學測潛力高頻預測", "hl_en": "The report called for stronger measures to prevent <span class=\"hl-word\">abuse of authority</span>.", "zh": "報告呼籲採取更強力的措施，防止濫用職權。"},
+        {"id": "L5-13", "word": "abuse", "meaning": "濫用 (n.)", "collocation": "substance abuse", "pos_zh": "n. phr. 藥物濫用", "years": "學測潛力高頻預測", "hl_en": "The health campaign provides information about the risks of <span class=\"hl-word\">substance abuse</span> among teenagers.", "zh": "這項健康宣導活動提供青少年藥物濫用風險的相關資訊。"},
+        {"id": "L5-14", "word": "allocate", "meaning": "撥款／配置 (v.)", "collocation": "allocate funds to...", "pos_zh": "v. phr. 撥款／配置資金用於……", "years": "學測潛力高頻預測", "hl_en": "The council <span class=\"hl-word\">allocated</span> more <span class=\"hl-word\">money to</span> flood prevention after two severe storms damaged the same district.", "zh": "兩場強烈風暴損害同一區域後，議會撥出更多經費用於防洪。"},
+        {"id": "L5-14", "word": "allocate", "meaning": "分配 (v.)", "collocation": "allocate time to something", "pos_zh": "v. phr. 分配時間給某事", "years": "學測潛力高頻預測", "hl_en": "Students should <span class=\"hl-word\">allocate</span> enough <span class=\"hl-word\">time to</span> revision before the final examination.", "zh": "學生應在期末考前分配足夠時間複習。"},
+        {"id": "L5-15", "word": "alter", "meaning": "修改 (v.)", "collocation": "alter a schedule", "pos_zh": "v. phr. 修改時刻表／行程", "years": "109年", "hl_en": "The airline had to <span class=\"hl-word\">alter</span> its <span class=\"hl-word\">schedule</span> when an unexpected equipment problem delayed several early flights.", "zh": "設備意外故障延誤數班早班機後，航空公司不得不修改航班表。"},
+        {"id": "L5-15", "word": "alter", "meaning": "改變 (v.)", "collocation": "alter public perceptions of...", "pos_zh": "v. phr. 改變大眾對……的觀感", "years": "109年", "hl_en": "The documentary helped <span class=\"hl-word\">alter public perceptions of</span> people with disabilities.", "zh": "這部紀錄片有助於改變大眾對身心障礙者的看法。"},
+        {"id": "L5-15", "word": "alter", "meaning": "改變 (v.)", "collocation": "alter the course of history", "pos_zh": "v. phr. 改變歷史進程", "years": "109年", "hl_en": "The discovery of a reliable vaccine <span class=\"hl-word\">altered the course of</span> medical <span class=\"hl-word\">history</span>.", "zh": "可靠疫苗的發現改變了醫學史的發展進程。"},
+        {"id": "L5-16", "word": "anticipate", "meaning": "預先因應 (v.)", "collocation": "anticipate something", "pos_zh": "v. phr. 預期／預先因應某事", "years": "115年 綜合", "hl_en": "Engineers <span class=\"hl-word\">anticipated</span> heavy rainfall and strengthened the drainage system before the summer storm season began.", "zh": "工程師預先考量豪雨，並在夏季風暴季節開始前強化排水系統。"},
+        {"id": "L5-16", "word": "anticipate", "meaning": "事先預料 (v.)", "collocation": "anticipate potential problems", "pos_zh": "v. phr. 預先想到潛在問題", "years": "115年 綜合", "hl_en": "Experienced organizers try to <span class=\"hl-word\">anticipate potential problems</span> before a major event.", "zh": "有經驗的主辦人員會在大型活動前，設法預先想到潛在問題。"},
+        {"id": "L5-17", "word": "asset", "meaning": "寶貴資源 (n.)", "collocation": "a valuable asset to...", "pos_zh": "n. phr. 對……而言的寶貴資源", "years": "101年", "hl_en": "Her ability to communicate with residents became <span class=\"hl-word\">a valuable asset</span> during the community rebuilding project.", "zh": "她與居民溝通的能力，在社區重建計畫期間成為寶貴資源。"},
+        {"id": "L5-17", "word": "asset", "meaning": "資產 (n.)", "collocation": "a major asset to...", "pos_zh": "n. phr. ……的重要資產", "years": "101年", "hl_en": "The public library has become <span class=\"hl-word\">a major asset to</span> the community by offering free classes.", "zh": "公共圖書館透過提供免費課程，成為社區的重要資產。"},
+        {"id": "L5-18", "word": "attribute", "meaning": "歸因於 (v.)", "collocation": "attribute A to B", "pos_zh": "v. phr. 將 A 歸因於 B", "years": "100年、103年", "hl_en": "The researchers <span class=\"hl-word\">attributed</span> the sudden decline in bee populations <span class=\"hl-word\">to</span> a combination of disease and habitat loss.", "zh": "研究人員將蜜蜂族群突然減少歸因於疾病與棲地喪失共同作用。"},
+        {"id": "L5-18", "word": "attribute", "meaning": "特質 (n.)", "collocation": "personal attributes", "pos_zh": "n. phr. 個人特質", "years": "100年、103年", "hl_en": "The study examined <span class=\"hl-word\">personal attributes</span> that may influence students' learning habits.", "zh": "這項研究檢視可能影響學生學習習慣的個人特質。"},
+        {"id": "L5-18", "word": "attribute", "meaning": "特性／屬性 (n.)", "collocation": "a distinguishing attribute", "pos_zh": "n. phr. 可辨識的獨特特徵", "years": "100年、103年", "hl_en": "The ability to change color is <span class=\"hl-word\">a distinguishing attribute</span> of several species of octopus.", "zh": "改變體色的能力是數種章魚的獨特特徵。"},
+        {"id": "L5-19", "word": "boom", "meaning": "繁榮／蓬勃發展 (n.)", "collocation": "a tourism boom", "pos_zh": "n. phr. 觀光業蓬勃發展", "years": "112年 閱讀", "hl_en": "The opening of the new airport created <span class=\"hl-word\">a tourism boom</span> that transformed several nearby coastal towns.", "zh": "新機場啟用帶來觀光繁榮，改變了附近多個濱海城鎮。"},
+        {"id": "L5-19", "word": "boom", "meaning": "蓬勃發展 (v.)", "collocation": "business is booming", "pos_zh": "v. phr. 生意蓬勃發展", "years": "112年 閱讀", "hl_en": "<span class=\"hl-word\">Business is booming</span> at local guesthouses after the new rail line opened.", "zh": "新鐵路通車後，當地民宿生意蓬勃發展。"},
+        {"id": "L5-19", "word": "boom", "meaning": "嬰兒潮 (n.)", "collocation": "the baby boom", "pos_zh": "n. phr. 嬰兒潮", "years": "112年 閱讀", "hl_en": "<span class=\"hl-word\">The baby boom</span> brought a rapid increase in demand for schools and housing.", "zh": "嬰兒潮使學校與住宅需求迅速增加。"},
+        {"id": "L5-20", "word": "bound", "meaning": "前往……的 (adj.)", "collocation": "bound for...", "pos_zh": "adj. phr. 前往（某地）的", "years": "104年；112年 文意選填；113年 詞彙", "hl_en": "Passengers <span class=\"hl-word\">bound for</span> the capital were told to use a different platform because of emergency track repairs.", "zh": "因鐵軌緊急維修，前往首都的乘客被告知改至另一月台搭車。"},
+        {"id": "L5-20", "word": "bound", "meaning": "勢必會……的 (adj.)", "collocation": "be bound to V", "pos_zh": "adj. phr. 勢必會／很有可能做某事", "years": "104年；112年 文意選填；113年 詞彙", "hl_en": "With strong local support, the community project <span class=\"hl-word\">is bound to</span> succeed.", "zh": "在強大的在地支持下，這項社區計畫勢必成功。"},
+        {"id": "L5-20", "word": "bound", "meaning": "界線／邊界 (n.)", "collocation": "beyond the bounds of...", "pos_zh": "prep. phr. 超出……的界限", "years": "104年；112年 文意選填；113年 詞彙", "hl_en": "The researchers stopped the experiment when the temperature rose <span class=\"hl-word\">beyond the bounds of</span> safety.", "zh": "溫度升高至超出安全界限時，研究人員便停止實驗。"},
+        {"id": "L5-21", "word": "cite", "meaning": "提出為理由 (v.)", "collocation": "cite something as a reason", "pos_zh": "v. phr. 援引某事作為理由", "years": "學測潛力高頻預測", "hl_en": "The company <span class=\"hl-word\">cited</span> rising energy costs <span class=\"hl-word\">as the</span> main <span class=\"hl-word\">reason</span> for increasing the price of its services.", "zh": "公司援引能源成本上漲，作為調高服務價格的主要理由。"},
+        {"id": "L5-21", "word": "cite", "meaning": "引用／援引 (v.)", "collocation": "cite something in support of...", "pos_zh": "v. phr. 引用（證據／研究）支持……", "years": "學測潛力高頻預測", "hl_en": "The researcher <span class=\"hl-word\">cited</span> several studies <span class=\"hl-word\">in support of</span> her claim about sleep quality.", "zh": "研究人員引用數項研究，支持她對睡眠品質的主張。"},
+        {"id": "L5-22", "word": "decay", "meaning": "衰敗 (n.)", "collocation": "fall into decay", "pos_zh": "v. phr. 逐漸衰敗", "years": "115年 篇章結構", "hl_en": "Without regular maintenance, the historic neighborhood slowly <span class=\"hl-word\">fell into decay</span> despite its cultural importance.", "zh": "儘管具有文化重要性，這片歷史街區因缺乏定期維護而逐漸衰敗。"},
+        {"id": "L5-22", "word": "decay", "meaning": "腐爛／蛀蝕 (n.)", "collocation": "tooth decay", "pos_zh": "n. phr. 蛀牙", "years": "115年 篇章結構", "hl_en": "Regular dental checkups can help identify <span class=\"hl-word\">tooth decay</span> before it becomes severe.", "zh": "定期牙科檢查有助於在蛀牙惡化前及早發現。"},
+        {"id": "L5-23", "word": "disclose", "meaning": "透露／披露 (v.)", "collocation": "disclose confidential information", "pos_zh": "v. phr. 透露機密資訊", "years": "114年 綜合", "hl_en": "The organization refused to <span class=\"hl-word\">disclose</span> the identities of volunteers who had reported violations of safety rules.", "zh": "該組織拒絕透露檢舉安全違規情形的志工身分。"},
+        {"id": "L5-23", "word": "disclose", "meaning": "揭露／公開 (v.)", "collocation": "disclose personal data", "pos_zh": "v. phr. 揭露個人資料", "years": "114年 綜合", "hl_en": "Companies must not <span class=\"hl-word\">disclose personal data</span> without the customer's consent.", "zh": "未經顧客同意，企業不得揭露其個人資料。"},
+        {"id": "L5-24", "word": "embrace", "meaning": "欣然接受 (v.)", "collocation": "embrace something", "pos_zh": "v. phr. 欣然接受／採用某事物", "years": "114年 篇章結構", "hl_en": "Once skeptical of online learning, several teachers <span class=\"hl-word\">embraced</span> the new platform after seeing students' progress.", "zh": "幾位原本對線上學習持懷疑態度的教師，看見學生成長後欣然採用新平台。"},
+        {"id": "L5-24", "word": "embrace", "meaning": "接納 (v.)", "collocation": "embrace cultural diversity", "pos_zh": "v. phr. 接納文化多樣性", "years": "114年 篇章結構", "hl_en": "Schools can help students <span class=\"hl-word\">embrace cultural diversity</span> through exchange programs.", "zh": "學校可透過交流計畫，幫助學生接納文化多樣性。"},
+        {"id": "L5-25", "word": "filter", "meaning": "過濾／篩除 (v.)", "collocation": "filter something", "pos_zh": "v. phr. 過濾／篩除（不可靠結果等）", "years": "學測潛力高頻預測", "hl_en": "The search system <span class=\"hl-word\">filters</span> unreliable results before presenting the most useful information to users.", "zh": "搜尋系統先篩除不可靠結果，再向使用者呈現最有用的資訊。"},
+        {"id": "L5-25", "word": "filter", "meaning": "篩除 (v.)", "collocation": "filter out something", "pos_zh": "v. phr. 篩除某物（如誤導資訊）", "years": "學測潛力高頻預測", "hl_en": "Readers need to <span class=\"hl-word\">filter out</span> misleading information when researching health topics online.", "zh": "讀者在網路上研究健康議題時，需要篩除誤導資訊。"},
+        {"id": "L5-26", "word": "grant", "meaning": "承認 (v.)", "collocation": "grant that...", "pos_zh": "v. phr. 承認……", "years": "101年；111年 混合", "hl_en": "The scientist <span class=\"hl-word\">granted that</span> the early results were encouraging but insisted more research was necessary.", "zh": "科學家承認初步結果令人振奮，但堅持仍需進一步研究。"},
+        {"id": "L5-26", "word": "grant", "meaning": "給予／准許 (v.)", "collocation": "grant permission to V", "pos_zh": "v. phr. 准許做某事", "years": "101年；111年 混合", "hl_en": "The museum <span class=\"hl-word\">granted</span> researchers <span class=\"hl-word\">permission to</span> examine its rare manuscripts.", "zh": "博物館准許研究人員檢視館藏的珍稀手稿。"},
+        {"id": "L5-26", "word": "grant", "meaning": "給予／假定 (v.)", "collocation": "take something for granted", "pos_zh": "v. phr. 將某事視為理所當然", "years": "101年；111年 混合", "hl_en": "People often <span class=\"hl-word\">take</span> clean drinking water <span class=\"hl-word\">for granted</span> until their supply is interrupted.", "zh": "人們往往將乾淨飲水視為理所當然，直到供水中斷才有所體會。"},
+        {"id": "L5-27", "word": "grip", "meaning": "籠罩 (v.)", "collocation": "fear grips...", "pos_zh": "v. phr. 恐懼籠罩（社區／人群等）", "years": "學測潛力高頻預測", "hl_en": "<span class=\"hl-word\">Fear gripped</span> the community after rumors about unsafe drinking water spread rapidly online.", "zh": "不安全飲用水的謠言在網路迅速流傳後，恐懼籠罩整個社區。"},
+        {"id": "L5-27", "word": "grip", "meaning": "掌握 (n.)", "collocation": "get a grip on something", "pos_zh": "v. phr. 掌握並控制（問題／局勢）", "years": "學測潛力高頻預測", "hl_en": "Officials struggled to <span class=\"hl-word\">get a grip on</span> the problem as housing prices kept rising.", "zh": "隨著房價持續上漲，官員難以掌握並控制問題。"},
+        {"id": "L5-27", "word": "grip", "meaning": "緊握／支配 (n.)", "collocation": "tighten one's grip on...", "pos_zh": "v. phr. 加強對……的掌控", "years": "學測潛力高頻預測", "hl_en": "A few large companies have <span class=\"hl-word\">tightened their grip on</span> the local food delivery market.", "zh": "少數大型企業加強了對當地外送市場的掌控。"},
+        {"id": "L5-28", "word": "institute", "meaning": "實施 (v.)", "collocation": "institute stricter rules", "pos_zh": "v. phr. 實施更嚴格的規定", "years": "109年", "hl_en": "The hospital <span class=\"hl-word\">instituted stricter</span> hygiene <span class=\"hl-word\">rules</span> following an increase in infections among patients.", "zh": "醫院在病人感染數增加後，開始實施更嚴格的衛生規範。"},
+        {"id": "L5-28", "word": "institute", "meaning": "設立 (v.)", "collocation": "institute a program", "pos_zh": "v. phr. 設立計畫／制度", "years": "109年", "hl_en": "The hospital <span class=\"hl-word\">instituted</span> a training <span class=\"hl-word\">program</span> to improve emergency care.", "zh": "醫院設立訓練計畫，以改善急診照護。"},
+        {"id": "L5-28", "word": "institute", "meaning": "研究機構 (n.)", "collocation": "a research institute", "pos_zh": "n. phr. 研究機構", "years": "109年", "hl_en": "A national <span class=\"hl-word\">research institute</span> released a report on the spread of invasive species.", "zh": "國家研究機構發布了一份外來入侵物種擴散情況的報告。"},
+        {"id": "L5-29", "word": "lump", "meaning": "混為一談 (v.)", "collocation": "lump... together", "pos_zh": "v. phr. 將……混為一談／一概而論", "years": "學測潛力高頻預測", "hl_en": "Experts warned against <span class=\"hl-word\">lumping</span> all online learning tools <span class=\"hl-word\">together</span> because their effectiveness varies greatly.", "zh": "專家警告，不應將所有線上學習工具一概而論，因為它們的效果差異很大。"},
+        {"id": "L5-29", "word": "lump", "meaning": "一筆總額 (n.)", "collocation": "a lump sum", "pos_zh": "n. phr. 一次支付的總額", "years": "學測潛力高頻預測", "hl_en": "The grant was paid as <span class=\"hl-word\">a lump sum</span> rather than in monthly installments.", "zh": "這筆補助金採一次給付，而非分月支付。"},
+        {"id": "L5-30", "word": "mandate", "meaning": "強制要求 (v.)", "collocation": "mandate something", "pos_zh": "v. phr. 強制要求某事", "years": "學測潛力高頻預測", "hl_en": "The new law <span class=\"hl-word\">mandates</span> clearer food labels so consumers can identify ingredients that may cause allergies.", "zh": "新法律強制要求更清楚的食品標示，讓消費者辨識可能引發過敏的成分。"},
+        {"id": "L5-30", "word": "mandate", "meaning": "職權／授權 (n.)", "collocation": "have a mandate to V", "pos_zh": "v. phr. 擁有做某事的職權", "years": "學測潛力高頻預測", "hl_en": "The independent committee <span class=\"hl-word\">has a mandate to</span> investigate complaints about public services.", "zh": "這個獨立委員會擁有調查公共服務申訴的職權。"},
+        {"id": "L5-30", "word": "mandate", "meaning": "授權 (n.)", "collocation": "a government mandate", "pos_zh": "n. phr. 政府授權", "years": "學測潛力高頻預測", "hl_en": "The agency received <span class=\"hl-word\">a government mandate</span> to inspect factories near protected wetlands.", "zh": "該機關獲得政府授權，檢查保護濕地附近的工廠。"},
+        {"id": "L5-31", "word": "manipulate", "meaning": "操縱（輿論） (v.)", "collocation": "manipulate public discussion", "pos_zh": "v. phr. 操縱公共討論", "years": "111年 綜合；115年 詞彙", "hl_en": "Investigators found that several accounts had <span class=\"hl-word\">manipulated public discussion</span> by spreading misleading statistics.", "zh": "調查人員發現多個帳號透過散播誤導性統計，操縱公共討論。"},
+        {"id": "L5-31", "word": "manipulate", "meaning": "操縱／竄改 (v.)", "collocation": "manipulate data", "pos_zh": "v. phr. 竄改／操縱數據", "years": "111年 綜合；115年 詞彙", "hl_en": "The scientist was dismissed after <span class=\"hl-word\">manipulating data</span> to produce false results.", "zh": "這名科學家因竄改數據以產生虛假結果而被解職。"},
+        {"id": "L5-31", "word": "manipulate", "meaning": "操作（裝置） (v.)", "collocation": "manipulate complex equipment", "pos_zh": "v. phr. 操作複雜設備", "years": "111年 綜合；115年 詞彙", "hl_en": "The training program teaches students how to <span class=\"hl-word\">manipulate complex equipment</span> safely.", "zh": "這項訓練計畫教導學生如何安全操作複雜設備。"},
+        {"id": "L5-32", "word": "prevail", "meaning": "占上風／獲勝 (v.)", "collocation": "something prevails", "pos_zh": "v. phr. （提案、意見等）占上風／獲得通過", "years": "學測潛力高頻預測", "hl_en": "Despite initial opposition, the proposal <span class=\"hl-word\">prevailed</span> after the committee heard evidence from local medical experts.", "zh": "儘管最初遭到反對，委員會聽取當地醫學專家證據後，提案仍獲通過。"},
+        {"id": "L5-32", "word": "prevail", "meaning": "盛行的／普遍的 (adj.)", "collocation": "prevailing attitudes toward...", "pos_zh": "n. phr. 對……的主流態度", "years": "學測潛力高頻預測", "hl_en": "The survey revealed changing <span class=\"hl-word\">prevailing attitudes toward</span> work among young adults.", "zh": "調查揭示年輕成年人對工作的主流態度正逐漸改變。"},
+        {"id": "L5-32", "word": "prevail", "meaning": "獲勝／克服 (v.)", "collocation": "prevail over something", "pos_zh": "v. phr. 克服（困難等）、取得勝利", "years": "學測潛力高頻預測", "hl_en": "The research team <span class=\"hl-word\">prevailed over</span> difficulties and completed the project ahead of schedule.", "zh": "研究團隊克服困難，提前完成計畫。"}
+    ];
+
+    // 動態建立「1-15句」、「16-30句」...區間按鈕與「全部」按鈕
+    function initCountButtons() {
+        const total = rawData.length;
+        const reviewGrid = document.getElementById('review-count-grid');
+        reviewGrid.innerHTML = '';
+
+        const step = 15;
+        for (let start = 0; start < total; start += step) {
+            const end = Math.min(start + step, total);
+            const label = `${start + 1}-${end} 句`;
+
+            const revBtn = document.createElement('button');
+            revBtn.className = 'count-btn';
+            revBtn.innerText = label;
+            revBtn.onclick = () => startReviewMode(start, end);
+            reviewGrid.appendChild(revBtn);
+        }
+
+        // 全部按鈕
+        const allBtn = document.createElement('button');
+        allBtn.className = 'count-btn';
+        allBtn.innerText = `全部 (${total}句)`;
+        allBtn.onclick = () => startReviewMode(0, total);
+        reviewGrid.appendChild(allBtn);
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function backToMenu() {
+        showScreen('home-screen');
+    }
+
+    /* ================= 複習模式邏輯 ================= */
+    let reviewList = [];
+    let revIdx = 0;
+    let rangeStartIdx = 0;
+    let rangeEndIdx = 0;
+
+    function startReviewMode(startIdx, endIdx) {
+        rangeStartIdx = startIdx;
+        rangeEndIdx = endIdx;
+        reviewList = rawData.slice(startIdx, endIdx);
+        revIdx = 0;
+        renderReviewCard();
+        showScreen('review-screen');
+    }
+
+    function renderReviewCard() {
+        const item = reviewList[revIdx];
+        const globalSentenceNum = rangeStartIdx + revIdx + 1;
+        document.getElementById('review-progress-label').innerText =
+            `複習卡（第 ${rangeStartIdx + 1}–${rangeEndIdx} 句）｜第 ${globalSentenceNum} 句（本組 ${revIdx + 1} / ${reviewList.length}）`;
+        document.getElementById('review-card-inner').classList.remove('is-flipped');
+
+        // 第一面（左上角單字保持原設定小寫）
+        document.getElementById('rev-id-tag').innerText = `${item.id}`;
+        document.getElementById('rev-word').innerText = item.word;
+        document.getElementById('rev-meaning').innerText = item.meaning;
+        document.getElementById('rev-collocation').innerText = item.collocation;
+        document.getElementById('rev-pos-zh').innerText = item.pos_zh;
+        document.getElementById('rev-years').innerText = `此單字（或搭配詞）學測出現年代／大題：${item.years}`;
+
+        // 第二面
+        document.getElementById('rev-back-tag').innerText = `${item.id}｜${item.collocation}`;
+        document.getElementById('rev-sent-en').innerHTML = item.hl_en;
+        document.getElementById('rev-sent-zh').innerText = item.zh;
+
+        document.getElementById('btn-rev-prev').disabled = (revIdx === 0);
+        document.getElementById('btn-rev-next').disabled = (revIdx === reviewList.length - 1);
+    }
+
+    function flipReviewCard() {
+        document.getElementById('review-card-inner').classList.toggle('is-flipped');
+    }
+
+    function moveReviewStep(step) {
+        const next = revIdx + step;
+        if (next >= 0 && next < reviewList.length) {
+            revIdx = next;
+            renderReviewCard();
+        }
+    }
+
+    window.onload = () => {
+        initCountButtons();
+    };
+</script>
+</body>
+</html>
